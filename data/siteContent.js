@@ -1,12 +1,12 @@
 import {
   BadgeCheck,
   BriefcaseBusiness,
-  Camera,
   Gem,
   HeartHandshake,
   Send,
   Sparkles,
 } from "lucide-react";
+import { FaInstagram, FaYoutube, FaTwitter } from "react-icons/fa";
 
 export const brand = {
   name: "THE AUMERA GIFTS",
@@ -140,29 +140,42 @@ export const about = {
   cta: "Explore Our Approach",
   features: [
     {
-      title: "Innovation",
-      description: "Fresh gifting concepts that adapt to modern brands and seasonal campaigns.",
-      icon: Sparkles
-    },
-    {
-      title: "Quality",
-      description: "Premium presentation, reliable sourcing, and considered finishing details.",
+      id: "privacy",
+      title: "Privacy Policy",
+      description:
+        "We respect your privacy. This policy explains what information we collect, how we use it, and the choices you have regarding your personal data. We only collect the data necessary to process orders, communicate about shipments, and improve your experience.",
       icon: BadgeCheck
     },
     {
-      title: "Customer Focus",
-      description: "Thoughtful service built around recipients, timelines, and brand standards.",
-      icon: HeartHandshake
+      id: "refund",
+      title: "Refund Policy",
+      description:
+        "If you’re not satisfied with an item, our refund policy describes the eligibility, the return process, and timelines for refunds. Contact our support within 14 days to initiate a return and we'll guide you through the process.",
+      icon: BriefcaseBusiness
+    },
+    {
+      id: "shipping",
+      title: "Shipping Policy",
+      description:
+        "Shipping details including carrier options, typical delivery windows, international shipments, and tracking information. Orders are processed within 2–4 business days unless stated otherwise; expedited options are available at checkout.",
+      icon: Send
     }
   ]
 };
 
 export const footerLinks = navLinks;
 
+export const footerPolicies = [
+  { label: "Terms & Conditions", href: "#terms" },
+  { label: "Privacy Policy", href: "#privacy" },
+  { label: "Refund Policy", href: "#refund" },
+  { label: "Shipping Policy", href: "#shipping" }
+];
+
 export const socialLinks = [
-  { label: "Instagram", href: "https://www.instagram.com", icon: Camera },
-  { label: "LinkedIn", href: "https://www.linkedin.com", icon: BriefcaseBusiness },
-  { label: "Twitter", href: "https://www.twitter.com", icon: Send }
+  { label: "Instagram", href: "https://www.instagram.com", icon: FaInstagram },
+  { label: "YouTube", href: "https://www.youtube.com", icon: FaYoutube },
+  { label: "Twitter", href: "https://www.twitter.com", icon: FaTwitter }
 ];
 
 export const LogoIcon = Gem;

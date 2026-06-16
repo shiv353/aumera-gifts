@@ -39,15 +39,17 @@ export default function AboutUs() {
           </a>
         </div>
 
-        <div className="feature-grid" aria-label="Company values">
+        <div className="feature-grid" aria-label="Policies">
           {about.features.map((feature) => {
             const Icon = feature.icon;
 
             return (
-              <article className="feature-card" key={feature.title}>
-                <span className="feature-icon" aria-hidden="true">
-                  <Icon size={24} strokeWidth={1.7} />
-                </span>
+              <article id={feature.id || undefined} className="feature-card" key={feature.title}>
+                {Icon ? (
+                  <span className="feature-icon" aria-hidden="true">
+                    <Icon size={24} strokeWidth={1.7} />
+                  </span>
+                ) : null}
                 <h3>{feature.title}</h3>
                 <p>{feature.description}</p>
               </article>
