@@ -3,21 +3,24 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
-const PAGE_SIZE = 12;
+const DEFAULT_PAGE_SIZE = 12;
+const SMALL_SCREEN_PAGE_SIZE = 6;
+const SMALL_SCREEN_BREAKPOINT = 760; // px
 
 export default function Products() {
   const sectionRef = useRef(null);
   const [products, setProducts] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const fetchProducts = async (pageNumber) => {
+  const fetchProducts = async (pageNumber, limit = pageSize) => {
     try {
       setLoading(true);
       setError(null);
-      const response = await fetch(`/api/products?page=${pageNumber}&limit=${PAGE_SIZE}`);
+      const response = await fetch(`/api/products?page=${pageNumber}&limit=${limit}`);
       if (!response.ok) throw new Error("Failed to load products");
       const data = await response.json();
       setProducts(data.products);
@@ -33,6 +36,31 @@ export default function Products() {
   useEffect(() => {
     fetchProducts(page);
   }, [page]);
+
+  // set page size based on viewport width and re-fetch when it changes
+  useEffect(() => {
+    const setSize = () => {
+      const isSmall = window.innerWidth <= SMALL_SCREEN_BREAKPOINT;
+      setPageSize(isSmall ? SMALL_SCREEN_PAGE_SIZE : DEFAULT_PAGE_SIZE);
+    };
+
+    setSize();
+    const onResize = () => {
+      const isSmall = window.innerWidth <= SMALL_SCREEN_BREAKPOINT;
+      const newSize = isSmall ? SMALL_SCREEN_PAGE_SIZE : DEFAULT_PAGE_SIZE;
+      setPageSize((current) => {
+        if (current === newSize) return current;
+        // reset to first page when page size changes
+        setPage(1);
+        // fetch new page with updated limit
+        fetchProducts(1, newSize);
+        return newSize;
+      });
+    };
+
+    window.addEventListener("resize", onResize, { passive: true });
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
 
   useEffect(() => {
     const cards = sectionRef.current?.querySelectorAll(".product-card");
