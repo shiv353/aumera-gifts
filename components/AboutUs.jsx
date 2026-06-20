@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { about, brand, LogoIcon } from "@/data/siteContent";
+import { about, brand, logoUrl } from "@/data/siteContent";
 
 export default function AboutUs() {
   const sectionRef = useRef(null);
@@ -29,12 +29,12 @@ export default function AboutUs() {
       <div className="about-shell">
         <div className="about-copy">
           <span className="about-logo" aria-hidden="true">
-            <LogoIcon size={34} strokeWidth={1.6} />
+           <img src={logoUrl} alt="THE AUMERA GIFTS Logo" className="h-8 w-auto" />
           </span>
           <p className="eyebrow">{brand.tagline}</p>
           <h2>{about.heading}</h2>
           <p>{about.description}</p>
-          <a className="button button--secondary" href="#products">
+          <a className="button button--secondary" href="/products">
             {about.cta}
           </a>
         </div>

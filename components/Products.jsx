@@ -1,11 +1,38 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef } from "react";
-import { products } from "@/data/siteContent";
+import { useEffect, useRef, useState } from "react";
+
+const PAGE_SIZE = 12;
 
 export default function Products() {
   const sectionRef = useRef(null);
+  const [products, setProducts] = useState([]);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const fetchProducts = async (pageNumber) => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await fetch(`/api/products?page=${pageNumber}&limit=${PAGE_SIZE}`);
+      if (!response.ok) throw new Error("Failed to load products");
+      const data = await response.json();
+      setProducts(data.products);
+      setTotalPages(data.totalPages);
+    } catch (err) {
+      console.error("Error fetching products:", err);
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchProducts(page);
+  }, [page]);
 
   useEffect(() => {
     const cards = sectionRef.current?.querySelectorAll(".product-card");
@@ -25,42 +52,81 @@ export default function Products() {
 
     cards.forEach((card) => observer.observe(card));
     return () => observer.disconnect();
-  }, []);
+  }, [products]);
+
+  const handlePage = (newPage) => {
+    if (newPage < 1 || newPage > totalPages) return;
+    setPage(newPage);
+  };
 
   return (
     <section id="products" className="section products-section" ref={sectionRef}>
       <div className="section-heading">
         <p className="eyebrow">Curated collection</p>
-        <h2>Our Products</h2>
-        <p>
-          Replace these placeholders with your final products, photography, pricing,
-          and gifting categories whenever the catalog is ready.
-        </p>
+        <h2>All Products</h2>
+        <p>Browse our full range of premium gifts with thoughtful curation, refined packaging, and top-rated selections.</p>
       </div>
 
-      <div className="product-grid">
-        {products.map((product, index) => (
-          <article
-            className="product-card"
-            style={{ "--reveal-delay": `${index * 70}ms` }}
-            key={product.title}
-          >
-            <div className="product-image-wrap">
-              <Image
-                src={product.image}
-                alt={product.alt}
-                fill
-                sizes="(max-width: 680px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                className="product-image"
-              />
-            </div>
-            <div className="product-content">
-              <h3>{product.title}</h3>
-              <p>{product.price}</p>
-            </div>
-          </article>
-        ))}
-      </div>
+      {loading && (
+        <div className="loader-shell">
+          <div className="loader-ring" aria-label="Loading products"></div>
+        </div>
+      )}
+
+      {error && (
+        <div className="loader-shell" style={{ color: "var(--rosy-brown)" }}>
+          <p>Error: {error}</p>
+        </div>
+      )}
+
+      {!loading && !error && products.length === 0 && (
+        <div className="loader-shell">
+          <p>No products available.</p>
+        </div>
+      )}
+
+      {!loading && !error && products.length > 0 && (
+        <>
+          <div className="product-grid">
+            {products.map((product, index) => (
+              <article
+                className="product-card"
+                style={{ "--reveal-delay": `${index * 70}ms` }}
+                key={product._id}
+              >
+                <div className="product-image-wrap">
+                  <Image
+                    src={product.image}
+                    alt={product.alt}
+                    fill
+                    sizes="(max-width: 680px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                    className="product-image"
+                  />
+                </div>
+                <div className="product-content product-content--spread">
+                  <div>
+                    <h3>{product.title}</h3>
+                    <p>{product.price}</p>
+                  </div>
+                  <span className="product-rating">{(product.rating ?? 0).toFixed(1)}★</span>
+                </div>
+              </article>
+            ))}
+          </div>
+
+          <div className="pagination-bar">
+            <button type="button" className="pagination-button" onClick={() => handlePage(page - 1)} disabled={page <= 1}>
+              Previous
+            </button>
+            <span className="pagination-info">
+              Page {page} of {totalPages}
+            </span>
+            <button type="button" className="pagination-button" onClick={() => handlePage(page + 1)} disabled={page >= totalPages}>
+              Next
+            </button>
+          </div>
+        </>
+      )}
     </section>
   );
 }

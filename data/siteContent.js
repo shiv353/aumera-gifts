@@ -7,6 +7,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { FaInstagram, FaYoutube, FaTwitter } from "react-icons/fa";
+import logo from '../public/logo.svg';
 
 export const brand = {
   name: "THE AUMERA GIFTS",
@@ -22,9 +23,9 @@ export const brand = {
 };
 
 export const navLinks = [
-  { label: "Home", href: "#home" },
-  { label: "Products", href: "#products" },
-  { label: "About Us", href: "#about" }
+  { label: "Home", href: "/" },
+  { label: "Products", href: "/products" },
+  { label: "About Us", href: "/#about" }
 ];
 
 export const heroSlides = [
@@ -34,7 +35,7 @@ export const heroSlides = [
     description:
       "Thoughtful selections, elegant packaging, and memorable details for clients, celebrations, and corporate milestones.",
     cta: "Explore Products",
-    href: "#products",
+    href: "/products",
     image:
       "https://images.unsplash.com/photo-1513201099705-a9746e1e201f?auto=format&fit=crop&w=2200&q=85",
     alt: "Elegant wrapped gifts in premium packaging"
@@ -45,7 +46,7 @@ export const heroSlides = [
     description:
       "From welcome kits to festive hampers, build gifting moments that feel refined, useful, and unmistakably intentional.",
     cta: "See Collection",
-    href: "#products",
+    href: "/products",
     image:
       "https://images.unsplash.com/photo-1607083206968-13611e3d76db?auto=format&fit=crop&w=2200&q=85",
     alt: "Curated products arranged for premium gifting"
@@ -67,7 +68,7 @@ export const heroSlides = [
     description:
       "A premium foundation built to evolve with your brand, product imagery, collections, and seasonal campaigns.",
     cta: "Start Curating",
-    href: "#products",
+    href: "/products",
     image:
       "https://images.unsplash.com/photo-1512909006721-3d6018887383?auto=format&fit=crop&w=2200&q=85",
     alt: "Luxury gift arrangement with soft natural light"
@@ -178,4 +179,4 @@ export const socialLinks = [
   { label: "Twitter", href: "https://www.twitter.com", icon: FaTwitter }
 ];
 
-export const LogoIcon = Gem;
+export const logoUrl = "/logo.svg";

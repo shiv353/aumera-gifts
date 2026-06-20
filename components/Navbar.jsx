@@ -1,13 +1,15 @@
 "use client";
 
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
-import { brand, LogoIcon, navLinks } from "@/data/siteContent";
+import { brand, logoUrl, navLinks } from "@/data/siteContent";
 
 export default function Navbar() {
+  const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [activeLink, setActiveLink] = useState("#home");
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 24);
@@ -17,46 +19,23 @@ export default function Navbar() {
   }, []);
 
   useEffect(() => {
-    const sections = navLinks
-      .map((link) => document.querySelector(link.href))
-      .filter(Boolean);
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-
-        if (visible) {
-          setActiveLink(`#${visible.target.id}`);
-        }
-      },
-      {
-        rootMargin: "-35% 0px -50% 0px",
-        threshold: [0.15, 0.35, 0.6]
-      }
-    );
-
-    sections.forEach((section) => observer.observe(section));
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
     document.body.classList.toggle("menu-open", isOpen);
     return () => document.body.classList.remove("menu-open");
   }, [isOpen]);
 
   const handleNavigate = () => setIsOpen(false);
 
+  const activeLink = pathname === "/products" ? "/products" : "/";
+
   return (
     <header className={`site-header ${isScrolled ? "site-header--scrolled" : ""}`}>
       <nav className="navbar" aria-label="Primary navigation">
-        <a className="brand-lockup" href="#home" onClick={handleNavigate}>
+        <Link className="brand-lockup" href="/" onClick={handleNavigate}>
           <span className="brand-mark" aria-hidden="true">
-            <LogoIcon size={22} strokeWidth={1.8} />
+           <img src={logoUrl} alt="THE AUMERA GIFTS Logo" className="h-8 w-auto" />
           </span>
           <span className="brand-text">{brand.name}</span>
-        </a>
+        </Link>
 
         <button
           className="nav-toggle"
@@ -71,14 +50,14 @@ export default function Navbar() {
 
         <div id="primary-menu" className={`nav-links ${isOpen ? "nav-links--open" : ""}`}>
           {navLinks.map((link) => (
-            <a
+            <Link
               key={link.href}
               className={activeLink === link.href ? "nav-link nav-link--active" : "nav-link"}
               href={link.href}
               onClick={handleNavigate}
             >
               {link.label}
-            </a>
+            </Link>
           ))}
         </div>
       </nav>

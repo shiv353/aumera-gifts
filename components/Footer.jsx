@@ -1,4 +1,4 @@
-import { brand, footerLinks, LogoIcon, socialLinks,footerPolicies } from "@/data/siteContent";
+import { brand, footerLinks, logoUrl, socialLinks,footerPolicies } from "@/data/siteContent";
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -9,7 +9,7 @@ export default function Footer() {
         <div className="footer-branding">
           <a className="brand-lockup footer-brand" href="#home">
             <span className="brand-mark" aria-hidden="true">
-              <LogoIcon size={22} strokeWidth={1.8} />
+             <img src={logoUrl} alt="Aumera Logo" className="h-8 w-auto" />
             </span>
             <span className="brand-text">{brand.name}</span>
           </a>
