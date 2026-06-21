@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 
 const DEFAULT_PAGE_SIZE = 12;
 const SMALL_SCREEN_PAGE_SIZE = 6;
@@ -122,22 +123,24 @@ export default function Products() {
                 style={{ "--reveal-delay": `${index * 70}ms` }}
                 key={product._id}
               >
-                <div className="product-image-wrap">
-                  <Image
-                    src={product.image}
-                    alt={product.alt}
-                    fill
-                    sizes="(max-width: 680px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                    className="product-image"
-                  />
-                </div>
-                <div className="product-content product-content--spread">
-                  <div>
-                    <h3>{product.title}</h3>
-                    <p>{product.price}</p>
+                <Link href={`/products/${product._id}`} className="product-link">
+                  <div className="product-image-wrap">
+                    <Image
+                      src={product.coverImage}
+                      alt={product.alt}
+                      fill
+                      sizes="(max-width: 680px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                      className="product-image"
+                    />
                   </div>
-                  <span className="product-rating">{(product.rating ?? 0).toFixed(1)}★</span>
-                </div>
+                  <div className="product-content product-content--spread">
+                    <div>
+                      <h3>{product.title}</h3>
+                      <p>{product.price}</p>
+                    </div>
+                    <span className="product-rating">{(product.rating ?? 0).toFixed(1)}★</span>
+                  </div>
+                </Link>
               </article>
             ))}
           </div>
