@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -9,6 +9,7 @@ export default function ProductDetails({ product }) {
   const images = product.images && product.images.length ? product.images : [product.coverImage];
   const [activeIndex, setActiveIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const thumbListRef = useRef(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -24,6 +25,15 @@ export default function ProductDetails({ product }) {
       setActiveIndex(index);
       setIsTransitioning(false);
     }, 180);
+  };
+
+  const scrollThumbnails = (direction) => {
+    if (!thumbListRef.current) return;
+    const scrollDistance = Math.round(thumbListRef.current.clientWidth * 0.9);
+    thumbListRef.current.scrollBy({
+      left: direction === "next" ? scrollDistance : -scrollDistance,
+      behavior: "smooth",
+    });
   };
 
   const handlePrevious = () => {
@@ -77,18 +87,42 @@ export default function ProductDetails({ product }) {
             )}
           </div>
 
-          <div className="product-thumbnails">
-            {images.map((img, i) => (
+          <div className="thumbnail-scroll-shell">
+            {images.length > 3 && (
               <button
-                key={i}
                 type="button"
-                className={`thumb-button ${i === activeIndex ? "active" : ""}`}
-                onClick={() => showImage(i)}
-                aria-label={`View image ${i + 1}`}
+                className="thumb-scroll-arrow thumb-scroll-arrow--left"
+                onClick={() => scrollThumbnails("prev")}
+                aria-label="Scroll thumbnails back"
               >
-                <Image src={img} alt={`${product.title} ${i + 1}`} width={75} height={75} className="thumb-image" />
+                <ChevronLeft size={18} />
               </button>
-            ))}
+            )}
+
+            <div className="product-thumbnails" ref={thumbListRef}>
+              {images.map((img, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  className={`thumb-button ${i === activeIndex ? "active" : ""}`}
+                  onClick={() => showImage(i)}
+                  aria-label={`View image ${i + 1}`}
+                >
+                  <Image src={img} alt={`${product.title} ${i + 1}`} width={75} height={75} className="thumb-image" />
+                </button>
+              ))}
+            </div>
+
+            {images.length > 3 && (
+              <button
+                type="button"
+                className="thumb-scroll-arrow thumb-scroll-arrow--right"
+                onClick={() => scrollThumbnails("next")}
+                aria-label="Scroll thumbnails forward"
+              >
+                <ChevronRight size={18} />
+              </button>
+            )}
           </div>
         </div>
 
